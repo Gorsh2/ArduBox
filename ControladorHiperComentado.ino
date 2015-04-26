@@ -23,7 +23,7 @@ int durante[] {72, 96, 72};
 float Tmin[] {18, 20, 22};
 float Tmax[] {20, 22, 26};
 
-#include <OneWire.h>                  //Se añaden las librerias necesarias para el funcionamiento del sensor de temperatura.
+#include <OneWire.h>                  //Se añaden las bibliotecas necesarias para el funcionamiento del sensor de temperatura.
 #include <DallasTemperature.h>        // Idem.
 
 #define Sensor 2                     //Se declara el pin donde se conectará el Sensor.
@@ -32,7 +32,7 @@ float Tmax[] {20, 22, 26};
 #define Rele2 4                      //...y el otro.
 
 OneWire ourWire(Sensor);             //Se establece el pin declarado como bus para la comunicación OneWire, la que usa el sensor.
-DallasTemperature sensors(&ourWire); //Se instancia la librería DallasTemperature, para interpretar la informacion del sensor como algo entendible.
+DallasTemperature sensors(&ourWire); //Se instancia la bibliotecas DallasTemperature, para interpretar la informacion del sensor como algo entendible.
 
 int minutos = 0;                      //Vamos a usar esta variable para contar los minutos que lleva andando el programa en cada etapa.
 int etapa = 0;                        //Vamos a usar esta variable para contar las etapas de fermentacion (la primera es la "cero").
