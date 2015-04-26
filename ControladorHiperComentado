@@ -14,7 +14,9 @@ Pueden usarse cuantas etapas se quieran, pongo tres como base pero pueden ser la
 El controlador va a evaluar la temperatura CADA MINUTO y en caso de pasarse de los limites por debajo o por arriba va a prender un enfriador en el Relay 1 y un calentador en el Relay 2, respectivamente.
 Ademas, en caso de no estar sirviendo el metodo de calentamiento/enfriado (por ej.: un fermbox con el hielo descongelado) va a titilar el led interno del Arduino durante todo ese minuto, o minutos si es que el problema continua.
 
-Cualquier cosa, comunicarse conmigo en la lista de Somos Cerveceros o en el de electrocerveceros...
+Cualquier cosa, comunicarse conmigo en la lista de Somos Cerveceros o en la de Electrocerveceros... 
+
+Salud!!!
 */
 
 int durante[] {72, 96, 72};
@@ -54,7 +56,7 @@ void setup() {
 void loop() {
   sensors.requestTemperatures();            //Pide la lectura de temperatura al sensor (no es en tiempo real: hay que pedirla con esto cada vez).
    
-  if (durante[etapa] == minutos / 60)             // Si los minutos que lleva el programa andando, completan las horas de la primera etapa...
+  if (durante[etapa] == minutos / 60)  // Si los minutos que lleva el programa andando, completan las horas de la primera etapa...
   { etapa++;                                      // ...entonces avanza a la etapa siguiente en el contador de etapas de fermentacion.
   minutos = 0;                                    // y reinicia el cuenta-minutos.
   Serial.println("Pasando a la siguiente etapa");
