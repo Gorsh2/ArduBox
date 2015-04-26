@@ -51,86 +51,67 @@ void setup() {
   sensors.begin();                    //Se inicia el sensor.
 }
 
+  
+  void updateRelays(relay1Action, relay2Action, msg) {
+      digitalWrite(Rele1,relay1Action);
+      digitalWrite(Rele2,relay2Action);
+      Serial.println(msg); 
+  }
 // A partir de aca empieza el "loop", o sea, el programa que se ejecuta cada un minuto.
 
 void loop() {
-  sensors.requestTemperatures();            //Pide la lectura de temperatura al sensor (no es en tiempo real: hay que pedirla con esto cada vez).
-   
-  if (durante[etapa] == minutos / 60)  // Si los minutos que lleva el programa andando, completan las horas de la primera etapa...
-  { etapa++;                                      // ...entonces avanza a la etapa siguiente en el contador de etapas de fermentacion.
-  minutos = 0;                                    // y reinicia el cuenta-minutos.
-  Serial.println("Pasando a la siguiente etapa");
-}
+  
+    sensors.requestTemperatures();            //Pide la lectura de temperatura al sensor (no es en tiempo real: hay que pedirla con esto cada vez).
+     
+    if (durante[etapa] == minutos / 60) {
+        etapa++;                                      
+        minutos = 0;                                    
+        Serial.println("Pasando a la siguiente etapa");
+    }
+    Serial.print(sensors.getTempCByIndex(0) + " grados C");
 
-  Serial.print(sensors.getTempCByIndex(0)); //Se imprime la temperatura en el monitor serie de la computadora...
-  Serial.println(" grados C");              //...junto con un espacio y la aclaracion de la unidad de medicion.
-   
-// Ahora selecciona entre tres opciones: temperatura mas caliente, mas fria, o en rango (dentro de la etapa); y actua en consecuencia, prendiendo relays y avisando por el serial.
+    // Ahora selecciona entre tres opciones: temperatura mas caliente, mas fria, o en rango (dentro de la etapa); y actua en consecuencia, prendiendo relays y avisando por el serial.
+    if (sensors.getTempCByIndex(0) >= Tmax[etapa]) {
+        updateRelays(LOW, HIGH, "Enfriador encendido")
+    } else if (sensors.getTempCByIndex(0) <= Tmin[etapa]) {
+        updateRelays(HIGH, LOW, "Calentador encendido")
+    } else {
+        updateRelays(HIGH, HIGH, "Temperatura en rango")
+    }
 
-  if (sensors.getTempCByIndex(0) >= Tmax[etapa])
-  {
-    digitalWrite(Rele1,LOW);
-    digitalWrite(Rele2,HIGH);
-    Serial.println("Enfriador encendido"); 
-  }
-  else if (sensors.getTempCByIndex(0) <= Tmin[etapa])
-  {
-    digitalWrite(Rele2,LOW);
-    digitalWrite(Rele1,HIGH);
-    Serial.println("Calentador encendido"); 
-  } 
-  else 
-  {
-    digitalWrite(Rele1,HIGH);
-    digitalWrite(Rele2,HIGH);
-    Serial.println("Temperatura en rango"); 
-  }
-
-// Por ultimo, toma la informacion de los reles y la temperatura anterior para evaluar si emitir un alerta con el led y en la computadora o solo hacer pasar el minuto hasta la proxima.
-
-if (digitalRead(Rele1) == LOW && sensors.getTempCByIndex(0) >= Tanterior)  //Si el Enfriador esta prendido pero la temperatura actual es mayor o igual que la anterior...
-{
-  if (primera == true)                                                     //...pero es la primera vez que pasa...
-  {   
-    primera = false;                                                       //...entonces deja pasar y falsea el "primera" para la proxima   
-    delay(60000);
-  }
-  else
-  {
-  Serial.println("El enfriador no esta funcionando correctamente");     // Si no es la primera, entonces avisa que anda algo mal, y...
-  for (int blips = 0; blips < 240; blips++)                             // ... ademas inicia un loop de lucecitas prendiendo y apagando cuatro veces por segundo, por un minuto en total.
-    {
-     digitalWrite(led,HIGH);
-     delay(125);
-     digitalWrite(led,LOW);
-     delay(125); 
-      }
-     }
-}
-else if (digitalRead(Rele2) == LOW && sensors.getTempCByIndex(0) <= Tanterior)  //Sigue exactamente lo mismo pero para el calentador (otro relay y cambio de signo).
-{
-  if (primera == true)
-  {   
-    primera = false;
-    delay(60000);
-  }
-  else
-  {  
-  Serial.println("El calentador no esta funcionando correctamente");
-   for (int blips = 0; blips < 240; blips++)
-    {
-     digitalWrite(led,HIGH);
-     delay(125);
-     digitalWrite(led,LOW);
-     delay(125); 
-      }
-  }
-}
-else
-{
-  primera = true;                                    //Vuelve a true para que no active en la primera que detecta.
-  delay(60000);                                      //Y como no hay nada que alertar, deja pasar un minuto y listo.
-  }
-Tanterior = sensors.getTempCByIndex(0);                               //Finalmente, guarda la temperatura anotada (sigue la misma aunque pase el minuto) como "Tanterior".
-minutos++;                                                            //Y suma un minuto a los recorridos.
+    // Por ultimo, toma la informacion de los reles y la temperatura anterior para evaluar si emitir un alerta con el led y en la computadora o solo hacer pasar el minuto hasta la proxima.
+    if (digitalRead(Rele1) == LOW && sensors.getTempCByIndex(0) >= Tanterior) {
+        if (isFirstTime) {   
+            primera = false;
+            delay(60000);
+        } else {
+            Serial.println("El enfriador no esta funcionando correctamente");     
+     
+          // Si no es la primera, entonces avisa que anda algo mal. Inicia un loop de lucecitas prendiendo y apagando cuatro veces por segundo, por un minuto en total.
+            for (int blips = 0; blips < 240; blips++) {
+                digitalWrite(led,HIGH);
+                delay(125);
+                digitalWrite(led,LOW);
+                delay(125); 
+            }
+        }
+    } else if (digitalRead(Rele2) == LOW && sensors.getTempCByIndex(0) <= Tanterior) { //Sigue exactamente lo mismo pero para el calentador (otro relay y cambio de signo).
+        if (primera == true) {   
+            primera = false;
+            delay(60000);
+        } else {  
+            Serial.println("El calentador no esta funcionando correctamente");
+            for (int blips = 0; blips < 240; blips++) {
+                digitalWrite(led,HIGH);
+                delay(125);
+                digitalWrite(led,LOW);
+                delay(125); 
+            }
+        } 
+    } else {
+        primera = true;
+        delay(60000);
+    }
+    Tanterior = sensors.getTempCByIndex(0);                               //Finalmente, guarda la temperatura anotada (sigue la misma aunque pase el minuto) como "Tanterior".
+    minutos++;                                                            //Y suma un minuto a los recorridos.
 }
