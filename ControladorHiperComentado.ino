@@ -1,4 +1,4 @@
-/*    CONTROLADOR DE TEMPERATURA V0.4
+/*    CONTROLADOR DE TEMPERATURA V1.0
 Esto se usa mas o menos asi: en la primera parte hay tres arrays (variable con varios valores dentro), llamados "durante", "Tmin" y "Tmax". Entre llaves, hay que poner los valores deseados, en horas de cada etapa de fermentacion en el primero, y las temperaturas limite de cada etapa.
 Ejemplo:
 Si quiero que pasen dos dias (48hs.) entre 18 y 20; luego cuatro dias (96hs.) entre 20 y 22 y por ultimo tres dias (72hs.) entre 22 y 26, tengo que escribir:
