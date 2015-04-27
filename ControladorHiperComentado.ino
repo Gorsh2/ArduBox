@@ -19,7 +19,7 @@ Cualquier cosa, comunicarse conmigo en la lista de Somos Cerveceros o en la de E
 Salud!!!
 */
 
-int durante[] {72, 96, 72};
+unsigned int durante[] {72, 96, 72};
 float Tmin[] {18, 20, 22};
 float Tmax[] {20, 22, 26};
 
@@ -34,8 +34,8 @@ float Tmax[] {20, 22, 26};
 OneWire ourWire(Sensor);             //Se establece el pin declarado como bus para la comunicación OneWire, la que usa el sensor.
 DallasTemperature sensors(&ourWire); //Se instancia la bibliotecas DallasTemperature, para interpretar la informacion del sensor como algo entendible.
 
-int minutos = 0;                      //Vamos a usar esta variable para contar los minutos que lleva andando el programa en cada etapa.
-int etapa = 0;                        //Vamos a usar esta variable para contar las etapas de fermentacion (la primera es la "cero").
+unsigned long minutos = 0;                      //Vamos a usar esta variable para contar los minutos que lleva andando el programa en cada etapa.
+unsigned int etapa = 0;                        //Vamos a usar esta variable para contar las etapas de fermentacion (la primera es la "cero").
 float Tanterior = 0;                  //Vamos a usar esta variable para guardar una lectura de temperatura para poder compararla con la siguiente.
 boolean primera = true;                //Vamos a usar esta variable de verdadero-falso para evitar una falsa alarma la primera vez que se prende alguno de los relays.
 
