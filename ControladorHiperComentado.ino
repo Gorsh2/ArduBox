@@ -3,7 +3,7 @@ Esto se usa mas o menos asi: en la primera parte hay tres arrays (variable con v
 Ejemplo:
 Si quiero que pasen dos dias (48hs.) entre 18 y 20; luego cuatro dias (96hs.) entre 20 y 22 y por ultimo tres dias (72hs.) entre 22 y 26, tengo que escribir:
 
-int durante[] {48, 96, 72};
+unsigned int durante[] {48, 96, 72};
 float Tmin[] {18, 20, 22};
 float Tmax[] {20, 22, 26};
 
