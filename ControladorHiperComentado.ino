@@ -72,14 +72,15 @@ void loop() {
   Serial.println(" grados C");
 
 
-  // Ahora selecciona entre tres opciones: temperatura mas caliente, mas fria, o en rango (dentro de la etapa); y actua en consecuencia, prendiendo relays y avisando por el serial.
-  if (sensors.getTempCByIndex(0) >= Tmax[etapa])
+  // Ahora selecciona entre tres opciones: temperatura mas caliente, mas fria, o en rango (dentro de la etapa)
+  // y actua en consecuencia, prendiendo relays y avisando por el serial.
+  if (sensors.getTempCByIndex(0) >= Tmax[etapa] &&  sensors.getTempCByIndex(0) < 50)
   {
     digitalWrite(Rele1,LOW);
     digitalWrite(Rele2,HIGH);
     Serial.println("Enfriador encendido");
   }
-  else if (sensors.getTempCByIndex(0) <= Tmin[etapa])
+  else if (sensors.getTempCByIndex(0) <= Tmin[etapa] &&  sensors.getTempCByIndex(0) > -10)
   {
     digitalWrite(Rele2,LOW);
     digitalWrite(Rele1,HIGH);
@@ -136,6 +137,17 @@ void loop() {
         delay(125);
       }
     }
+  }
+  else if (sensors.getTempCByIndex(0) < -10 || sensors.getTempCByIndex(0) > 50)
+  {
+     Serial.println("El sensor no esta funcionando correctamente");
+   for (int blips = 0; blips < 240; blips++)
+    {
+     digitalWrite(led,HIGH);
+     delay(125);
+     digitalWrite(led,LOW);
+     delay(125); 
+      }
   }
   else
   {
